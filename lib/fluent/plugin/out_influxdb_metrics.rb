@@ -2,8 +2,8 @@
 require 'date'
 require 'net/http'
 
-class Fluent::InfluxdbOutput < Fluent::BufferedOutput
-  Fluent::Plugin.register_output('influxdb-metrics', self)
+class Fluent::InfluxdbMetricsOutput < Fluent::BufferedOutput
+  Fluent::Plugin.register_output('influxdb_metrics', self)
 
   config_param :host, :string,  :default => 'localhost'
   config_param :port, :integer,  :default => 8086
@@ -46,11 +46,11 @@ class Fluent::InfluxdbOutput < Fluent::BufferedOutput
       bulk << formatted_record if formatted_record
     end
 
-    http = Net::HTTP.new(@host, @port.to_i)
-    request = Net::HTTP::Post.new("/db/#{@dbname}/series?u=#{@user}&p=#{password}",
-                                  'Content-Type' => 'application/json; charset=utf-8')
-    request.body = Yajl::Encoder.encode(bulk)
-    http.request(request).value
+    http = Net::HTTP.new(@host, @port)
+    resp, _ = http.post("/db/#{@dbname}/series?u=#{@user}&p=#{@password}&time_precision=s",
+                           Yajl::Encoder.encode(bulk) + "\n",
+                           'Content-Type' => 'text/json')
+    resp.value
   end
 
   def format_record(tag, time, record)
@@ -74,7 +74,7 @@ class Fluent::InfluxdbOutput < Fluent::BufferedOutput
       return {
         name: @table,
         columns: cols,
-        points: points
+        points: [points]
       }
     end
 

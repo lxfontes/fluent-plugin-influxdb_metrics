@@ -1,13 +1,13 @@
 $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
-  s.name          = "fluent-plugin-influxdb-metrics"
+  s.name          = "fluent-plugin-influxdb_metrics"
   s.version       = '0.0.1'
   s.authors       = ["lxfontes"]
   s.email         = ["lxfontes+influx@gmail.com"]
   s.description   = %q{InfluxDB output plugin for Fluentd}
   s.summary       = %q{output plugin for fluentd}
-  s.homepage      = "https://github.com/lxfontes/fluent-plugin-influxdb-metrics"
+  s.homepage      = "https://github.com/lxfontes/fluent-plugin-influxdb_metrics"
   s.license       = 'MIT'
 
   s.files         = `git ls-files`.split($/)
