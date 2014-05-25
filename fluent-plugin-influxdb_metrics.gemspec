@@ -2,7 +2,7 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name          = "fluent-plugin-influxdb_metrics"
-  s.version       = '0.0.1'
+  s.version       = `cat VERSION`
   s.authors       = ["lxfontes"]
   s.email         = ["lxfontes+influx@gmail.com"]
   s.description   = %q{InfluxDB output plugin for Fluentd}
