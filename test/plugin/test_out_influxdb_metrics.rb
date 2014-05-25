@@ -37,7 +37,7 @@ class InfluxdbMetricsOutput < Test::Unit::TestCase
 
   def test_writes_to_default_index
     stub_influx
-    driver.configure('fields age,sub.field.pos')
+    driver.configure('fields age,sub.field.pos,_key')
     driver.emit(sample_record)
     driver.run
   end

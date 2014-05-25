@@ -1,6 +1,6 @@
 # encoding: utf-8
 require 'date'
-require 'net/http'
+require 'influxdb'
 
 class Fluent::InfluxdbMetricsOutput < Fluent::BufferedOutput
   Fluent::Plugin.register_output('influxdb_metrics', self)
@@ -38,6 +38,14 @@ class Fluent::InfluxdbMetricsOutput < Fluent::BufferedOutput
     super
   end
 
+  def influx_client
+    @influxdb ||= InfluxDB::Client.new(@dbname, host: @host,
+                                                 port: @port,
+                                                 username: @user,
+                                                 password: @password)
+    @influxdb
+  end
+
   def write(chunk)
     bulk = []
 
@@ -46,16 +54,11 @@ class Fluent::InfluxdbMetricsOutput < Fluent::BufferedOutput
       bulk << formatted_record if formatted_record
     end
 
-    http = Net::HTTP.new(@host, @port)
-    resp, _ = http.post("/db/#{@dbname}/series?u=#{@user}&p=#{@password}&time_precision=s",
-                           Yajl::Encoder.encode(bulk) + "\n",
-                           'Content-Type' => 'text/json')
-    resp.value
+    influx_client.write_point(@table, bulk, false, 's')
   end
 
   def format_record(tag, time, record)
-    cols = ['time']
-    points = [time]
+    metric = {time: time}
 
     filter_keys.each do |field|
       path = field.split('.')
@@ -65,19 +68,11 @@ class Fluent::InfluxdbMetricsOutput < Fluent::BufferedOutput
       end
 
       if rec_pos
-        cols << field
-        points << rec_pos
+        metric[field] = rec_pos
       end
     end
 
-    if cols.length > 1
-      return {
-        name: @table,
-        columns: cols,
-        points: [points]
-      }
-    end
-
+    return metric if metric.keys.length > 1
     nil
   end
 end

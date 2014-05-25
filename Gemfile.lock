@@ -1,8 +1,9 @@
 PATH
   remote: .
   specs:
-    fluent-plugin-influxdb_metrics (0.0.2)
+    fluent-plugin-influxdb_metrics (0.0.3)
       fluentd
+      influxdb
 
 GEM
   remote: https://rubygems.org/
@@ -19,6 +20,8 @@ GEM
       sigdump (~> 0.2.2)
       yajl-ruby (~> 1.0)
     http_parser.rb (0.6.0)
+    influxdb (0.1.7)
+      json
     json (1.8.1)
     msgpack (0.5.8)
     rake (10.3.2)
