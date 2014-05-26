@@ -61,6 +61,7 @@ class Fluent::InfluxdbMetricsOutput < Fluent::BufferedOutput
     metric = {time: time}
 
     filter_keys.each do |field|
+      field_scored = field.gsub('.', '_')
       path = field.split('.')
       rec_pos = record[path.shift]
       path.each do |p|
@@ -68,7 +69,7 @@ class Fluent::InfluxdbMetricsOutput < Fluent::BufferedOutput
       end
 
       if rec_pos
-        metric[field] = rec_pos
+        metric[field_scored] = rec_pos
       end
     end
 
