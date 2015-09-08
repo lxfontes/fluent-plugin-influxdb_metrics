@@ -16,8 +16,10 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_runtime_dependency "fluentd"
-  s.add_runtime_dependency "influxdb"
+  s.add_runtime_dependency "influxdb", "~> 0.1.0"
 
   s.add_development_dependency "rake"
   s.add_development_dependency "webmock"
+  s.add_development_dependency "test-unit", ">= 3.1.0"
+  s.add_development_dependency "minitest", ">= 5.8.0"
 end
